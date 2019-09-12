@@ -1,11 +1,15 @@
 import React from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View, StatusBar } from "react-native";
+import { LinearGradient } from "expo-linear-gradient";
 
 export default function Loading() {
     return (
-        <View style={styles.container}>
-            <Text style={styles.text}>Getting the fucking weather</Text>
-        </View>
+        <LinearGradient
+            colors={["#2980B9", "#6DD5FA", "#ffffff"]}
+            style={styles.container}>
+            <StatusBar barStyle="dark-content" />
+            <Text style={styles.text}>Getting the weather</Text>
+        </LinearGradient>
     )
 }
 
@@ -20,7 +24,5 @@ const styles = StyleSheet.create({
     text: {
         color: "#2c2c2c",
         fontSize: 30
-
-
     }
 })
