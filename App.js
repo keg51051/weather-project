@@ -1,41 +1,49 @@
-import React, {Component} from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import React, {Component} from "react";
+import { Alert } from "react-native";
+import Loading from "./Loading";
+import * as Location from "expo-location";
+import axios from "axios";
 import Weather from "./Weather";
 
-export default class App extends Component {
-    state = {
-        isLoaded: true
-    };
+const API_KEY = "c3600fd4792b9e9b565fc8d459e7a116";
 
-    render() {
-        const { isLoaded } = this.state;
-        return (
-            <View style={styles.container}>
-                {isLoaded ? (
-                    <Weather />
-                ) : (
-                    <View style={styles.loading}>
-                        <Text style={styles.loadingText}>Getting the weather</Text>
-                    </View>
-                )}
-            </View>
-        );
+export default class extends React.Component {
+  state = {
+    isLoading: true
+  }
+  getWeather = async(latitude, longitude) => {
+    const { 
+      data: {
+        main: {temp},
+        weather
+    } } = await axios.get
+    (
+    `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${API_KEY}&units=metric`
+    );
+    this.setState({
+      isLoading:false, 
+      condition: weather[0].main, 
+      temp
+    });
+  };
+
+  getLocation = async() => {
+    try {
+      const response = await Location.requestPermissionsAsync();
+      const {coords: { latitude, longitude }
+    } = await Location.getCurrentPositionAsync();
+    this.getWeather(latitude, longitude)
+    } catch (error) {
+      Alert.alert("Can't find you.", "So sad");
     }
+    
+  }
+  componentDidMount() {
+    this.getLocation();
+  }
+  render() {
+    const { isLoading, temp, condition } = this.state;
+    return isLoading ? <Loading /> : <Weather temp={Math.round(temp)} condition={condition}/>;
+  }
 }
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: '#fff'
-    },
-    loading: {
-        flex: 1,
-        backgroundColor: "#FDF6AA",
-        justifyContent: 'flex-end',
-        paddingLeft: 25
-    },
-    loadingText: {
-        fontSize: 38,
-        marginBottom: 100
-    }
-});
+    

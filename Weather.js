@@ -1,21 +1,52 @@
-import React, {Component} from 'react';
-import { StyleSheet, Text, View} from 'react-native';
-import { LinearGradient } from "expo";
+import React from "react";
+import { StyleSheet, View, Text, StatusBar } from "react-native";
+import PropTypes from "prop-types";
+import { LinearGradient } from "expo-linear-gradient";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
-export default class Weather extends Component {
-    render() {
-        return (
+export default function Weather({ temp }) {
+    return (
             <LinearGradient
-                colors={["#00C6FB", "#005BEA"]}
-                style={styles.container}
-            />
-            );
-    }
+                colors={["#4c669f", "#3b5998", "#192f6a"]}
+                style={styles.container}>
+                    {/* <StatusBar barStyle="light-content"/> */}
+            <View style={styles.halfContainer}>
+
+            <MaterialCommunityIcons size={96}name="weather-lightning-rainy" color="white"></MaterialCommunityIcons>
+            <Text style={styles.temp}>{temp}°C</Text>
+            </View>
+            <View style={styles.halfContainer}/>
+            </LinearGradient>
+    );
+}
+
+Weather.propTypes = {
+    temp: PropTypes.number.isRequired,
+    condition: PropTypes.oneOf([
+        "Thunderstorm", 
+        "Drizzle", 
+        "Rain",
+        "Snow", 
+        "Atmosphere", 
+        "Clear", 
+        "Clouds",
+        "Haze"
+    ]).isRequired
 }
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center"
+    },
+    temp: {
+        fontSize: 36,
+        color: "white"
+    },
+    halfContainer: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center"
     }
-
-});
+})
